@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowling Rankings</title>
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+    <!-- <link rel="stylesheet" href="../static/styles/style.css"> -->
+    <!--Regular Datatables CSS-->
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!--Responsive Extension Datatables CSS-->
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">	 
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tablestyle.css') }}">
+ 
+    <style>
+        :root {
+            --playercolor : {{pcol}};
+        }
+    </style>
+
+</head>
+<body class = 'bg-gray-100'>
+        <!-- Navigation bar -->
+    <nav class="bg-gray-300 fixed w-full z-20 top-0 left-0 border-b border-gray-200 ">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <p class="flex items-center">
+            <span class="self-center text-3xl font-PlayfairDisplay font-extrabold whitespace-nowrap ">IPL Sabermetrics</span>
+        </p>
+        </div>
+    </nav>
+
+    
+    {% if show_table %}
+    <!-- Player Rankings section -->
+    <p class = "pt-[5%] pb-[2%] text-4xl font-bold  font-PlayfairDisplay mx-[3%] px-10" > Player Rankings / Bowling </p>
+
+    <section>
+        <div id = "thetable_container" class="bg-white relative mx-[3%] mb-12 px-10 pt-2 pb-3 overflow-x-auto shadow-md rounded-lg">
+            <!-- Data table -->
+            <table id = "thetable" class="w-full pt-3">
+                <thead class="text-xs bg-gray-400 text-gray-700 uppercase">
+                    <tr>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Name
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Inns
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Balls
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Overs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Maidens
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Runs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3  text-center">
+                            Wkts
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Avg
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Economy
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Strike_Rate
+                        </th>
+                                                                       
+                        <th scope="col" class="px-3 py-3 text-center">
+                            WpI
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center ">
+                            Wp4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            0W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            3W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            4W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            5W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Wides
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            NB
+                        </th>
+                        <th scope="col" class="py-3 text-center">
+                            accuracy
+                        </th>                                                                                                                                                
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+        <!-- Filter section --> 
+    <section>
+        
+        <div class=" mx-[3%] flex flex-row items-center justify-center pt-8 pb-4 px-4">
+            <div class="flex flex-col py-4">
+                <label for="balls" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Balls bowled</label>
+                    <input id="balls" value="100" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+
+            <div class="flex flex-col mx-4 py-4">
+                <label for="inns" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Innings played</label>
+                    <input id="inns" value= "10" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+            
+            <div class="flex flex-col py-4">
+                <label for="runs" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Runs conceded</label>
+                    <input id="runs" value = "100" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+            
+        </div>
+        <div class="flex justify-center mb-10">
+            <label for="player" class="block mb-2 text-sm font-medium text-gray-900 "></label>
+            <button type="submit" onclick = "datatableloader()" class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-20 sm:w-auto px-5 py-2.5 h-50 text-center">Submit</button>
+        </div>
+    
+    </section>
+
+    {%  endif %}
+    <!-- jQuery and Datatables JavaScript -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>		
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+    <script>
+        function datatableloader(){
+            const url = 'api/bowl';
+            
+            const inns = $("#inns").val();
+            const runs = $("#runs").val();
+            const balls = $("#balls").val();
+            const arguments = [inns, balls, runs];
+
+            console.log(JSON.stringify(arguments));
+            
+            $('#thetable').DataTable({
+                ajax:{
+                    url:url,
+                    type: "POST",
+                    dataSrc:'',
+                    data: {"arguments" : JSON.stringify(arguments)}
+                },
+                columns:[
+                {data : "name"},
+                {data : "innings"},
+                {data : "balls"},
+                {data : "overs"},
+                {data : "maidens"},
+                {data : "runs"},
+                {data : "wickets"},
+                {data : "avg"},
+                {data : "economy"},
+                {data : "strike_rate"},
+                {data : "wiperinn"},
+                {data : "wicketsper4overs"},
+                {data : "wi0"},
+                {data : "wi3"},
+                {data : "wi4"},
+                {data : "wi5"},
+                {data : "wides"},
+                {data : "noballs"},
+                {data : "accuracy"},
+
+                ],
+                "destroy": true    
+
+            })
+                }
+      </script>
+        <script>
+            $(document).ready(datatableloader())
+        </script>
+
+</body>
+</html>

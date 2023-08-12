@@ -2,15 +2,32 @@ import json
 from flask import Flask, render_template, request
 import pandas as pd
 from Headon import calc_average, calc_strikerate, get_battervbowler, headon
-from utils import get_player_image, readrankcsv, filter , batter_dismissals_plotter , batter_runs_plotter
+from utils import get_player_image, readrankcsv, df_filter , batter_dismissals_plotter , batter_runs_plotter
 app = Flask(__name__)
 from batterstats import *
 from bowlerstats import *
+from urllib.request import Request, urlopen  
 
 # Read main dataset and rankings
-df = pd.read_csv("ipl-ball-by-ball.csv")
-batrank = readrankcsv("battingranks.csv")
-bowlrank = readrankcsv("bowlingranks.csv")
+
+
+
+ball_by_ball_url = r"https://drive.google.com/uc?export=download&id=10pLZZTF0lzgYw3WcX0q4SXzS17sDZY7N"
+names_url = r"https://drive.google.com/uc?export=download&id=17em2t0mkgR-zmp0jU2hejqYCz5fmNDd7"
+battingranks_url = r"https://drive.google.com/uc?export=download&id=11gArqsq82uLSU4Ng0hzHzTMX8x3oI-ax"
+bowlingranks_url = r"https://drive.google.com/uc?export=download&id=1ZIThb4MGETWSeaf5Ygyf-8lm36ZkWdcv"
+
+urls = [ball_by_ball_url, battingranks_url,bowlingranks_url]
+contents = []
+for i in urls:
+    req = Request(i)
+    req.add_header('User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0')
+    contents.append(urlopen(req))
+
+
+df = pd.read_csv(contents[0])
+batrank = readrankcsv(contents[1] , "bat")
+bowlrank = readrankcsv(contents[2] , "bowl")
 
 # Home page route
 @app.route("/", methods=["GET"])
@@ -89,7 +106,7 @@ def batterrank():
     if request.method == "POST":
         args = json.loads(request.values.get("arguments"))
         inns, balls, runs = int(args[0]), int(args[1]), int(args[2])
-        rankjson = filter(batrank, balls, inns, runs).to_json(orient="records")
+        rankjson = df_filter(batrank, balls, inns, runs).to_json(orient="records")
         return rankjson
 
 @app.route("/bowl", methods=["GET"])
@@ -102,7 +119,7 @@ def bowlerrank():
     if request.method == "POST":
         args = json.loads(request.values.get("arguments"))
         inns, balls, runs = int(args[0]), int(args[1]), int(args[2])
-        rankjson = filter(bowlrank, balls, inns, runs).to_json(orient="records")
+        rankjson = df_filter(bowlrank, balls, inns, runs).to_json(orient="records")
         return rankjson
 
 # Run the Flask app

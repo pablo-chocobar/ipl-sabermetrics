@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile</title>
+    <!-- <link rel="stylesheet" href="../static/styles/style.css"> -->
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <style>
+        :root {
+            --playercolor : {{pcol}};
+        }
+    </style>
+
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function cb(selection) {
+            $.getJSON({
+                url: "/callback", data: { 'data': selection }, success: function (result) {
+                    Plotly.newPlot('chart', result, {displaylogo: false});;
+                }
+            });
+        }
+    </script>
+
+
+
+</head>
+<body class = "bg-gray-50">
+    <!-- Navigation bar -->
+    <nav class="bg-gray-200 fixed w-full z-20 top-0 left-0 border-b border-gray-200 ">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <p class="flex items-center">
+            <span class="self-center text-3xl font-PlayfairDisplay font-extrabold whitespace-nowrap ">IPL Sabermetrics</span>
+        </p>
+        </div>
+    </nav>
+    
+        <!-- Player search form section -->
+    {% if not show_table %}
+        <section class = "py-[5%]">
+            <div>
+                <form action = "/playersearch" method="post">
+                <div class = "flex justify-center">
+                    <div class="mb-6 mr-2">
+                        <label for="player" class="block mb-2 text-sm font-medium text-gray-900 ">Player name</label>
+                        <input type="text" id="player" name="player" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 p-2.5 ">
+                        
+                    </div>
+                    <div class="mb-6 flex items-end">
+                        <label for="player" class="block mb-2 text-sm font-medium text-gray-900 "></label>
+                        <button type="submit" class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-20 sm:w-auto px-5 py-2.5 h-50 text-center">Submit</button>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>
+    {%endif%}       
+    
+        <!-- Player details section -->
+    {% if show_table %}
+    <section class = pt-[4%]>
+        <div class = "justify-center">
+            <div class="grid justify-items-center pt-[40%] relative z-0 bg-playercolor">
+                <img src = "{{pimg}}" class = "object-contain h-[600px] w-[600px] z-10 absolute bottom-0">
+                <div class="absolute z-20 h-1/4 w-full bottom-0 bg-gradient-to-t from-playercolor">
+                </div>
+            </div>
+        </div>
+        <p class = "pt-[5%] text-5xl font-extrabold font-PlayfairDisplay mx-[3%] px-10" > 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r to-playercolor from-black">{{player1}}</span></p>
+        <p class = "text-3xl font-extrabold font-PlayfairDisplay mx-[3%] px-10">Stats</p>
+    </section>
+
+        <!-- Batting statistics section -->
+    <section class = "py-[1%]">
+        <p class = "text-3xl font-extrabold font-PlayfairDisplay mx-[3%] px-10">Batting</p>
+        <div class="relative mx-[5%] overflow-x-auto shadow-md rounded-lg pt-1">
+            <table class="w-full text-sm text-center text-gray-500">
+                <thead class="text-xs bg-gray-400 text-gray-700 uppercase">
+                    <tr>
+                        <th scope="col" class="px-3 py-3 text-center font-semibold">
+                            Year
+                        </th> 
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Inns
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Balls
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Runs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            HS
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            avg
+                        </th>                        
+                        <th scope="col" class="px-3 py-3  text-center">
+                            SR
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            100
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            50
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            30
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Outs
+                        </th>
+                                                                       
+                        <th scope="col" class="px-3 py-3 text-center">
+                            6s
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center ">
+                            4s
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Dots
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            BpB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Bp4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Bp6
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Rf4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Rf6
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            RfB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            RpB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            BASRA
+                        </th>
+                        <th scope="col" class="py-3 text-center">
+                            DB%
+                        </th>                                                                                                                                                
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for batArray in batNest %}
+                    <tr class="border-b border-gray-200 ">
+                        <th scope="row" class="px-3 py-4 text-center font-medium text-gray-900 whitespace-nowrap bg-gray-50">
+                            {{batArray[0]}}
+                        </th>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[1]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{batArray[2]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[3]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{batArray[4]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[5]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{batArray[6]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[7]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[8]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[9]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[10]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[11]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[12]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[13]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[14]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[15]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[16]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[17]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[18]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[19]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[20]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{batArray[21]}}
+                        </td>
+                        <td class="py-4 text-center">
+                            {{batArray[22]}}
+                        </td>
+                        <td class="py-4 text-center">
+                            {{batArray[23]}}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
+
+    </section>
+
+        <!-- Bowling statistics section -->
+    <section class = "py-[1%]">
+        <p class = "text-3xl font-extrabold font-PlayfairDisplay mx-[3%] px-10">Bowling</p>
+        <div class="relative mx-[5%] mt-1 overflow-x-auto shadow-md rounded-lg">
+            <table class="w-full text-sm text-center text-gray-500">
+                <thead class="text-xs bg-gray-400 text-gray-700 uppercase">
+
+                    <tr>                        
+                        <th scope="col" class="px-3 py-3 text-center font-semibold">
+                        Year
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Inns
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Balls
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Overs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Maidens
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Runs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3  text-center">
+                            Wkts
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Avg
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Eco
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Strike Rate
+                        </th>
+                                                                       
+                        <th scope="col" class="px-3 py-3 text-center">
+                            WpI
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center ">
+                            Wp4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            0W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            3W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            4W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            5W
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Wides
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            NB
+                        </th>
+                        <th scope="col" class="py-3 text-center">
+                            acc
+                        </th>                                                                                                                                                
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for bowlArray in bowlNest %}
+                    <tr class="border-b border-gray-200 ">
+                        <th scope="row" class="px-3 py-4 text-center font-medium text-gray-900 whitespace-nowrap bg-gray-50">
+                            {{bowlArray[0]}}
+                        </th>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[1]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{bowlArray[2]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[3]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{bowlArray[4]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[5]}}
+                        </td>
+                        <td class="px-3 py-4 bg-gray-50 text-center">
+                            {{bowlArray[6]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[7]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[8]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[9]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[10]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[11]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[12]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[13]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[14]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[15]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[16]}}
+                        </td>
+                        <td class="px-3 py-4 text-center">
+                            {{bowlArray[17]}}
+                        </td>
+                        <td class="py-4 text-center">
+                            {{bowlArray[18]}}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
+    </section>
+
+        <!-- Performance against bowlers chart -->
+    <p class = "text-3xl font-extrabold font-PlayfairDisplay mx-[3%] px-10">Performance against bowlers</p>
+    <div id="chart" class = "mt-4 mx-[10%]"></div>
+
+        <!-- Slider for minimum balls faced -->
+
+    <div class = "pt-6 pb-10 mx-[10%] grid justify-items-center">
+        <p>Minimum Balls Faced:  <output id="slidervalue"></output></p>
+            <input id="slider" type="range" min="0" max="100" value="1" class="w-9/12 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+    </div>
+
+        <!-- Dismissals Break-up pie chart -->
+
+    <p class = "text-3xl mt-4 font-extrabold font-PlayfairDisplay mx-[3%] px-10">Dismissals Break-up</p>
+    <div id="piechart" class = "mt-4 mx-[10%]"></div>
+
+        <!-- Slider JavaScript functionality -->
+    <script>
+        const value = document.querySelector("#slidervalue")
+        const input = document.querySelector("#slider")
+        value.textContent = input.value
+        
+        input.addEventListener("input", (event) => {
+        value.textContent = event.target.value;
+        cb(input.value);
+        })
+
+    </script>
+     
+
+
+    {%  endif %}
+    <!-- Plotly charts initialization -->
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+      var graphs = {{graphJSON | safe}};
+      Plotly.plot('chart',graphs,{});
+    </script>
+
+    <script type='text/javascript'>
+    var graphs = {{pieJSON | safe}};
+    Plotly.plot('piechart',graphs,{});
+    </script>
+
+
+</body>
+</html>

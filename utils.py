@@ -5,9 +5,28 @@ import os
 from ast import literal_eval
 import plotly
 import plotly.express as px
+import cloudinary
+
+cloudinary.config( 
+  cloud_name = "dzkylos5o", 
+  api_key = "342758611647946", 
+  api_secret = "04IpZaH-TW_hrU3dCxFbdPRYe8I",
+  secure = True
+)
+CLOUDINARY_URL= "cloudinary://342758611647946:04IpZaH-TW_hrU3dCxFbdPRYe8I@dzkylos5o"
+names_url = r"https://drive.google.com/uc?export=download&id=17em2t0mkgR-zmp0jU2hejqYCz5fmNDd7"
+
+import cloudinary.uploader
+import cloudinary.api
+from urllib.request import Request, urlopen
+
+
+req = Request(names_url)
+req.add_header('User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0')
+content = urlopen(req)
 
 # Read the 'names.csv' file, converting 'team' column to a list
-names = pd.read_csv("names.csv", converters={'team': literal_eval})
+names = pd.read_csv(content, converters={'team': literal_eval})
 common_names = names["cname"].tolist()
 
 # Function to get common names based on partial matching
@@ -28,12 +47,15 @@ def get_teams(cname):
 # Function to create a dictionary of player images
 def make_image_dict():
     images_dict = {}
-    players_with_images = []
-    for i in os.listdir("./images/"):
+    players_with_images = {}
+    folders = [folder["name"] for folder in cloudinary.api.root_folders()["folders"]]
+    folders.remove("samples")
+    for i in folders:
         images_dict[i] = []
-        for j in os.listdir("./images/"+i+"/"):
-            images_dict[i].append(j[:j.index(".png")])
-            players_with_images.append(j[:j.index(".png")])
+        temp_dict = cloudinary.api.resources(type = "upload" , prefix= i , max_results = 30)
+        for j in temp_dict["resources"]:
+                images_dict[i].append(j["public_id"].lstrip(i + "//"))
+                players_with_images[j["public_id"].lstrip(i + "//")] = j["secure_url"]
     return images_dict, players_with_images
 
 images_dict, images_list = make_image_dict()
@@ -41,31 +63,33 @@ images_dict, images_list = make_image_dict()
 # Function to get player's image
 def get_player_image(cname):
     teams, name = get_teams(cname)
-    colors = {'delhi-capitals': "#c90006", 'kolkata-knight-riders': "#563089", "chennai-super-kings": "#ffcb04",
-              'gujarat-titans': "#77c7f2", 'lucknow-super-giants': "#0155e1", 'mumbai-indians': "#143975",
-              'punjab-kings': "#d71820", 'rajasthan-royals': "#eb83b5", 'royal-challengers-bangalore': "#cb2e2e",
-              'sunrisers-hyderabad': "#ef4023"}
+    colors = { 'delhi-capitals' : "#c90006", 'kolkata-knight-riders': "#563089" , "chennai-super-kings": "#ffcb04", 
+              'gujarat-titans': "#77c7f2", 'lucknow-super-giants': "#0155e1", 'mumbai-indians' : "#143975",
+ 'punjab-kings' : "#d71820" , 'rajasthan-royals' : "#eb83b5" , 'royal-challengers-bangalore':"#cb2e2e" , 
+ 'sunrisers-hyderabad': "#ef4023"}
     for i in teams:
         team = process.extractOne(i, images_dict.keys())[0]
         if cname in images_dict[team] or name in images_dict[team]:
-            return name, os.path.join("./images/" + team + "/", process.extractOne(cname,
-                                                                                   os.listdir("./images/" + team + "/"))[0]), colors[team]
-        elif process.extractOne(cname, os.listdir("./images/" + team + "/"), scorer=fuzz.partial_ratio)[1] == 100:
-            return name, os.path.join("./images/" + team + "/", process.extractOne(cname,
-                                                                                   os.listdir("./images/" + team + "/"),
-                                                                                   scorer=fuzz.partial_ratio)[0]), colors[team]
+            temp_ = process.extractOne(cname, images_dict[team])[0]
+            print(temp_)
+            
+            return name, images_list[temp_],colors[team]
+        
+        elif process.extractOne(cname, images_dict[team], scorer=fuzz.partial_ratio)[1] == 100:
+            temp = process.extractOne(cname, images_dict[team],scorer=fuzz.partial_ratio)[0]
+            return name, images_list[temp] ,colors[team] 
 
 # Function to read ranks CSV file and standardize column names
-def readrankcsv(name):
+def readrankcsv(name , m):
     df = pd.read_csv(name)
     if "Unnamed: 0" in df.columns:
         df.drop("Unnamed: 0", axis=1, inplace=True)
         
-    if "bowl" in name:
+    if m =="bowl":
         bowlcols = ["name", "innings", "balls", "overs", "maidens", "runs", "wickets", "avg", "economy", "strike_rate",
                     "wiperinn", "wicketsper4overs", "wi0", "wi3", "wi4", "wi5", "wides", "noballs", "accuracy"]
         df.columns = bowlcols
-    elif "bat" in name:
+    elif m =="bat":
         batcols = ["name", "innings", "balls", "runs", "highest", "avg", "strike_rate", "cents", "fifty", "thirty",
                    "outs", "sixes", "fours", "dots", "balls_per_boundary", "balls_per_four", "balls_per_six",
                    "runs_from_fours", "runs_from_sixes", "runs_from_boundaries", "runs_per_boundary", "basra",
@@ -74,7 +98,7 @@ def readrankcsv(name):
     return df
 
 # Function to filter Batter/Bowler Rank DataFrame based on certain conditions
-def filter(df, minballs=100, mininns=10, minruns=100):
+def df_filter(df, minballs=100, mininns=10, minruns=100):
     filtered = df[(df["balls"] > minballs) & (df["innings"] > mininns) & (df["runs"] > minruns)]
     return filtered
 

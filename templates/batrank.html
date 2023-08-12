@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batting Rankings</title>
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+    <!--Regular Datatables CSS-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>		
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!--Responsive Extension Datatables CSS-->
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">	 
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tablestyle.css') }}">
+ 
+    <style>
+        :root {
+            --playercolor : {{pcol}};
+        }
+    </style>
+
+
+</head>
+<body class = 'bg-gray-100'>
+    <!-- Navigation bar -->
+    <nav class="bg-gray-300 fixed w-full z-20 top-0 left-0 border-b border-gray-200 ">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <p class="flex items-center">
+            <span class="self-center text-3xl font-PlayfairDisplay font-extrabold whitespace-nowrap ">IPL Sabermetrics</span>
+        </p>
+        </div>
+    </nav>
+
+    {% if show_table %}
+    <!-- Player Rankings section -->
+    <p class = "pt-[5%] pb-[2%] text-4xl font-bold  font-PlayfairDisplay mx-[3%] px-10" > Player Rankings / Batting </p>
+
+    <section>
+        <div id = "thetable_container" class="bg-white relative mx-[3%] mb-12 px-1 pt-2 overflow-x-auto shadow-md rounded-lg">
+            <table id = "thetable" class="w-full pt-3">
+                <thead class="text-xs bg-gray-400 text-gray-700 uppercase">
+                    <tr>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Name
+                        </th>   
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Inns
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Balls
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Runs
+                        </th>                        
+                        <th scope="col" class="px-3 py-3 text-center">
+                            HS
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            avg
+                        </th>                        
+                        <th scope="col" class="px-3 py-3  text-center">
+                            SR
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            100
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            50
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            30
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Outs
+                        </th>                                                                       
+                        <th scope="col" class="px-3 py-3 text-center">
+                            6s
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center ">
+                            4s
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Dots
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            BpB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Bp4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Bp6
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Rf4
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            Rf6
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            RfB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            RpB
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-center">
+                            BASRA
+                        </th>
+                        <th scope="col" class="py-3 text-center">
+                            DB%
+                        </th>                                                                                                                                                
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section>    <!-- Filter section -->
+        
+        <div class=" mx-[3%] flex flex-row items-center justify-center pt-8 pb-4 px-4">
+            <div class="flex flex-col py-4">
+                <label for="balls" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Balls faced</label>
+                    <input id="balls" value="100" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+
+            <div class="flex flex-col mx-4 py-4">
+                <label for="inns" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Innings played</label>
+                    <input id="inns" value= "10" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+            
+            <div class="flex flex-col py-4">
+                <label for="runs" class="text-gray-80 text-sm font-bold leading-tight tracking-normal mb-2">Min. no. of Runs scored</label>
+                    <input id="runs" value = "100" class="text-gray-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none bg-white font-normal w-64 h-10 flex items-center pl-4 text-sm border-gray-300 rounded border shadow" placeholder="Placeholder" />
+            </div>
+            
+        </div>
+
+        <div class="flex justify-center mb-10">
+            <label for="player" class="block mb-2 text-sm font-medium text-gray-900 "></label>
+            <button type="submit" onclick = "datatableloader()" class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-20 sm:w-auto px-5 py-2.5 h-50 text-center">Submit</button>
+        </div>
+    
+    </section>
+
+    {%  endif %}
+
+	<!--Datatables -->
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <!-- Function to load DataTable -->
+    <script>
+        function datatableloader(){
+            const url = 'api/bat';
+            
+            const inns = $("#inns").val();
+            const runs = $("#runs").val();
+            const balls = $("#balls").val();
+            const arguments = [inns, balls, runs];
+            console.log(JSON.stringify(arguments));
+            
+            $('#thetable').DataTable({
+                ajax:{
+                    url:url,
+                    type: "POST",
+                    dataSrc:'',
+                    data: {"arguments" : JSON.stringify(arguments)}
+                },
+                columns:[
+                {data : "name"},
+                {data : "innings"},
+                {data : "balls"},
+                {data : "runs"},
+                {data : "highest"},
+                {data : "avg"},
+                {data : "strike_rate"},
+                {data : "cents"},
+                {data : "fifty"},
+                {data : "thirty"},
+                {data : "outs"},
+                {data : "sixes"},
+                {data : "fours"},
+                {data : "dots"},
+                {data : "balls_per_boundary"},
+                {data : "balls_per_four"},
+                {data : "balls_per_six"},
+                {data : "runs_from_fours"},
+                {data : "runs_from_sixes"},
+                {data : "runs_from_boundaries"},
+
+                {data : "runs_per_boundary"},
+                {data : "basra"},
+
+                {data : "dot_ball_percentage"},
+                ],
+                "destroy": true    
+
+            })
+                }
+    </script>
+    <script>
+        $(document).ready(datatableloader())
+      </script>
+</body>
+</html>
