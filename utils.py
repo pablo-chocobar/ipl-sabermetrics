@@ -1,7 +1,6 @@
 import json
 from thefuzz import process, fuzz
 import pandas as pd
-import os
 from ast import literal_eval
 import plotly
 import plotly.express as px
