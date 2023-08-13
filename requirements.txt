@@ -1,6 +1,7 @@
 cloudinary==1.33.0
-Flask==1.1.2
+Flask>=2.2.2
 pandas==1.4.4
 plotly==5.9.0
 thefuzz==0.19.0
+statsmodels
 gunicorn==19.7.1
