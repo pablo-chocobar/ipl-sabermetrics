@@ -76,7 +76,12 @@ def get_player_image(cname):
         
         elif process.extractOne(cname, images_dict[team], scorer=fuzz.partial_ratio)[1] == 100:
             temp = process.extractOne(cname, images_dict[team],scorer=fuzz.partial_ratio)[0]
-            return name, images_list[temp] ,colors[team] 
+            return name, images_list[temp] ,colors[team]
+        if teams[-1] == i:
+            if process.extractOne(cname, images_dict[team], scorer=fuzz.partial_ratio)[1] > 1:
+                temp = process.extractOne(cname, images_dict[team],scorer=fuzz.partial_ratio)[0]
+                print("lol")
+                return name, images_list[temp] ,colors[team] 
 
 # Function to read ranks CSV file and standardize column names
 def readrankcsv(name , m):
