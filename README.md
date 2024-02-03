@@ -4,10 +4,10 @@ Contains scripts to generate csv files with useful ball-by-ball information from
 
 ## screenshots
 ### homepage
-![homepage](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/home.jpeg?raw=true)
+![homepage](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/home.png?raw=true)
 
 ### player profile 
-![player profile](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/profile.jpeg?raw=true)
+![player profile](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/profile.png?raw=true)
 
 ### light mode
-![homepage](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/home-light.jpeg?raw=true)
+![homepage](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/home-light.png?raw=true)
