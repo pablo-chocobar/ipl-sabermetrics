@@ -40,12 +40,12 @@ def get_bowler_wickets_in_match(matchdf, name):
 
 # Function to calculate bowling metrics
 def get_bowling_metrics(balls, runs, wickets, noballs, wides):
-    average = round(runs / wickets, 2) if wickets > 0 else float("NaN")
+    average = round(runs / wickets, 2) if wickets > 0 else None
     overs_bowled = total_overs(balls)
-    economy = round(runs / overs_bowled, 2 ) if overs_bowled > 1 else float("NaN")
-    strike_rate = round(balls / wickets, 2) if wickets > 0 else float("NaN")
-    wicketsper4overs = round(wickets / overs_bowled * 4 , 2) if overs_bowled > 0 else float("NaN")
-    accuracy = round((balls - (noballs + wides)) * 100 / balls , 2) if balls > 0 else float("NaN")
+    economy = round(runs / overs_bowled, 2 ) if overs_bowled > 1 else None
+    strike_rate = round(balls / wickets, 2) if wickets > 0 else None
+    wicketsper4overs = round(wickets / overs_bowled * 4 , 2) if overs_bowled > 0 else None
+    accuracy = round((balls - (noballs + wides)) * 100 / balls , 2) if balls > 0 else None
     
     return average, overs_bowled, economy, strike_rate, wicketsper4overs, accuracy
 
@@ -71,7 +71,7 @@ def display_bowler_overall(df, name):
     innings, wi0, wi3, wi4, wi5 = get_bowler_hauls(df, name)
     
     maidens = len(get_maidens(df, name))
-    wiperinn = round(wickets / innings, 2) if innings > 0 else float("NaN")
+    wiperinn = round(wickets / innings, 2) if innings > 0 else None
     
     return innings, balls, overs_bowled, maidens, runs, wickets, average, economy, strike_rate, wiperinn, wicketsper4overs, wi0, wi3, wi4, wi5, wides, noballs, accuracy
 

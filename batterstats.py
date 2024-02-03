@@ -39,24 +39,24 @@ def get_batter_stats(df,name,super_over):
 
 # Function to calculate batting metrics
 def get_batting_metrics(balls, runs, outs, sixes, fours, dots):
-    average = round(runs / outs, 2) if outs > 0 else float("NaN")
-    balls_per_boundary = round(balls/ (sixes + fours),2) if sixes or fours else float("NaN")
-    balls_per_four = round(balls / fours,2) if fours else float("NaN")
-    balls_per_six = round(balls / sixes,2) if sixes else float("NaN")
+    average = round(runs / outs, 2) if outs > 0 else None
+    balls_per_boundary = round(balls/ (sixes + fours),2) if sixes or fours else None
+    balls_per_four = round(balls / fours,2) if fours else None
+    balls_per_six = round(balls / sixes,2) if sixes else None
     
     runs_from_fours = round(4 * fours,2)
     runs_from_sixes = round(6 * sixes,2)
     runs_from_boundaries = round(runs_from_fours + runs_from_sixes,2)
     
-    dot_ball_percentage = round(dots /balls, 2) * 100 if balls else float("NaN")
-    runs_per_boundary = round(runs_from_boundaries / (sixes + fours), 2) if sixes or fours else float("NaN")
+    dot_ball_percentage = round(dots /balls, 2) * 100 if balls else None
+    runs_per_boundary = round(runs_from_boundaries / (sixes + fours), 2) if sixes or fours else None
     
-    strike_rate = round(runs / balls * 100, 2 ) if balls else float("NaN")
+    strike_rate = round(runs / balls * 100, 2 ) if balls else None
     
-    if strike_rate != float("NaN") and average != float("NaN"):
+    if strike_rate != None and average != None:
         basra = round(average + strike_rate, 2)
     else:
-        basra = float("NaN")
+        basra = None
     
     
     return average, strike_rate, basra, balls_per_boundary, balls_per_four, balls_per_six \
@@ -72,7 +72,7 @@ def get_batter_highest(df, name):
         runs_list.append(get_batter_runs_in_match(match_df, name))
     cents, hfcents, thirty = len([i for i in runs_list if i > 99]), len([i for i in runs_list if i < 100 and i > 49]) ,len([i for i in runs_list if i < 50 and i > 29])
     
-    hs = max(runs_list) if len(runs_list) > 0 else float("NaN")
+    hs = max(runs_list) if len(runs_list) > 0 else None
 
     return len(innings), hs, cents, hfcents, thirty
 
