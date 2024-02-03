@@ -9,11 +9,5 @@ Contains scripts to generate csv files with useful ball-by-ball information from
 ### player profile 
 ![player profile](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/profile.jpeg?raw=true)
 
-### head on
-![head on](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/headon.jpeg?raw=true)
-
-### batting rank
-![batting rank](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/batrank.jpeg?raw=true)
-
-### bowling rank
-![bowling rank](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/bowlrank.jpeg?raw=true)
+### light mode
+![homepage](https://github.com/pablo-chocobar/ipl-sabermetrics/blob/main/screens/home-light.jpeg?raw=true)
